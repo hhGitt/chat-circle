@@ -1,6 +1,7 @@
 package com.hh.user.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.hh.commons.annotations.AccessLimit;
 import com.hh.commons.common.HttpStatus;
 import com.hh.commons.common.ResultData;
 import com.hh.commons.pojo.dto.user.UserLoginDto;
@@ -60,6 +61,7 @@ public class UserController {
 
     @ApiOperation("用户登录")
     @PostMapping("/login")
+    @AccessLimit(seconds = 20, maxCount = 5)
     private ResultData checkLogin(@RequestBody UserLoginDto userDto) {
         User user = userService.checkAccount(userDto);
         if (user == null) {
