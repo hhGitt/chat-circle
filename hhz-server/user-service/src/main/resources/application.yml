@@ -1,0 +1,79 @@
+server:
+  port: 8080
+
+spring:
+  config:
+    import: file:commons-api/src/main/resources/application-commons.yml
+  application:
+    name: user-service  # user的服务名称
+  main:
+    allow-bean-definition-overriding: true  #当遇到同样名字的时候，是否允许覆盖注册
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/hh_server
+      username: root
+      password: xxxxxx
+  mvc:
+    # 解决swagger3兼容问题
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  cloud:
+    nacos:
+      server-addr: 192.168.181.135:8848 # nacos服务地址
+#      discovery:
+#        namespace: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss  # 序列化时间戳
+    time-zone: GMT+8
+  mail:    #邮箱基本配置
+    host: smtp.qq.com #配置smtp服务主机地址
+    username: xxxxxxx@qq.com #发送者邮箱
+    password: xxxxxxx #配置密码,注意不是真正的密码，而是刚刚申请到的授权码
+    port: 587 #端口号465或587
+    default-encoding: UTF-8 #默认的邮件编码为UTF-8
+    properties: #其他参数
+      mail:  #配置SSL 加密工厂
+        smtp:
+          ssl: #本地测试，先放开ssl
+            enable: false
+            required: false
+        debug: true #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
+
+feign:
+  client:
+    config:
+      default:  # 这里用default就是全局配置，如果是写服务名称，则是针对某个微服务的配置
+        loggerLevel: BASIC # 日志级别，BASIC就是基本的请求和响应信息
+  httpclient:
+    enabled: true # 支持HttpClient的开关
+    max-connections: 200 # 最大连接数
+    max-connections-per-route: 50  # 单个路径最大连接数
+
+mybatis-plus:
+  global-config:
+    db-config:
+      table-prefix: t_
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: false  # 关闭驼峰命名
+
+alisms:
+  accessKeyId: xxxxxxxx  # 阿里的 AccessKeyId
+  accessKeySecret: xxxxxxxx  # 阿里的 AccessKeySecret
+  type: access_key # 凭证类型，access_key、sts、ecs_ram_role、ram_role_arn、rsa_key_pair
+  endpoint: dysmsapi.aliyuncs.com
+  templateCode: SMS_154950909  # 短信模板
+  signName: 阿里云短信测试  # 短信标题
+  templateParam: '{"code":"%s"}'  # 短信所需键值对
+
+mail:
+  validateCode:
+    subject: HHZ注册邮件  # 邮件标题
+    text: '【HHZ】尊敬的用户，欢迎使用本平台，您此次注册的验证码为%s，5分钟内有效，请及时输入。'  # 邮箱内容
+
+validateCode-time: 5 # 验证码有效时间
+
+validateCode:
+  time: 5 # 验证码有效时间
+  pre: "VerificationCode_"  # 验证码在redis中前缀

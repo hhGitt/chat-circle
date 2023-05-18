@@ -1,0 +1,17 @@
+server:
+  port: 8088
+spring:
+  application:
+    name: snowflake-service
+  cloud:
+    nacos:
+      server-addr: 192.168.181.135:8848 # nacos服务地址
+      discovery:
+        service: snowflake-service
+  mvc:
+    # 解决swagger3兼容问题
+    pathmatch:
+      matching-strategy: ant_path_matcher
+snowflake:  # 雪花算法相关配置
+  workerId: 0 # 机器标识
+  datacenterId: 0 # 数据标识

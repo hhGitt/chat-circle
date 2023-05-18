@@ -1,0 +1,66 @@
+server:
+  port: 8081
+
+spring:
+  config:
+    import: file:commons-api/src/main/resources/application-commons.yml
+  application:
+    name: chat-service  # user的服务名称
+  main:
+    #当遇到同样名字的时候，是否允许覆盖注册
+    allow-bean-definition-overriding: true
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/hh_server
+      username: root
+      password: xxxxxx
+      # 监控统计
+      filter:
+        stat:
+          enabled: true
+      initial-size: 2 # 初始化连接
+      min-idle: 1 # 最小空闲连接数
+      max-active: 20 # 最大活动连接
+      # 获取连接超时等待时间
+      max-wait: 60000
+      # 间隔多久进行一次加检测,检测需要关闭的空闲连接
+      time-between-eviction-runs-millis: 60000
+      # 一个连接在池中最小生存空间
+      min-evictable-idle-time-millis: 3000000
+      # 验证连接有效与否的SQL,不同的数据配置不同
+      validation-query: SELECT 'x'
+      # 指名连接是否被空闲连接回收器进行检验,如果检验失败,则连接将被池中去除
+      test-while-idle: true
+      # 借出连接时不要测试,否则影响性能
+      test-on-borrow: false
+  mvc:
+    # 解决swagger3兼容问题
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  cloud:
+    nacos:
+      server-addr: 192.168.181.135:8848 # nacos服务地址
+  jackson:
+    # 序列化时间戳
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+feign:
+  client:
+    config:
+      default:  # 这里用default就是全局配置，如果是写服务名称，则是针对某个微服务的配置
+        loggerLevel: BASIC # 日志级别，BASIC就是基本的请求和响应信息
+  httpclient:
+    enabled: true # 支持HttpClient的开关
+    max-connections: 200 # 最大连接数
+    max-connections-per-route: 50  # 单个路径最大连接数
+
+mybatis-plus:
+  global-config:
+    db-config:
+      #      id-type: auto
+      table-prefix: t_
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: false  # 关闭驼峰命名

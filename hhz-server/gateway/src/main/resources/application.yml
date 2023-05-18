@@ -1,0 +1,60 @@
+server:
+  port: 10010
+spring:
+  mvc:
+    # 解决swagger3兼容问题
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  config:
+    import: file:commons-api/src/main/resources/application-commons.yml
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.181.135:8848 #nacos地址
+    gateway:
+      routes:
+        - id: user-service  # 路由标示，唯一
+          uri: lb://user-service # 路由的目标地址
+          predicates: # 路由断言，判断请求是否符合规则
+            - Path=/us/** # 路径断言，判断路径是否是以/us开头，如果是则符合
+          filters:
+            - StripPrefix=1
+        - id: snowflake-service
+          uri: lb://snowflake-service
+          predicates:
+            - Path=/si/**
+          filters:
+            - StripPrefix=1
+        - id: chat-service
+          uri: lb://chat-service
+          predicates:
+            - Path=/cs/**
+          filters:
+            - StripPrefix=1
+      globalcors: # 全局的跨域处理
+        add-to-simple-url-handler-mapping: true # 解决options请求被拦截问题
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: # 允许哪些网站的跨域请求
+              - "http://localhost:5173/"
+            allowedMethods: # 允许的跨域ajax的请求方式
+              - "GET"
+              - "POST"
+              - "DELETE"
+              - "PUT"
+              - "OPTIONS"
+            allowedHeaders: "*" # 允许在请求中携带的头信息
+            allowCredentials: true # 是否允许携带cookie
+            maxAge: 360000 # 这次跨域检测的有效期
+
+component-switch:
+  fdfs: false
+
+swagger:
+  enable: true
+  application-name: swagger
+  application-version: 1.0
+  application-description: springfox swagger 3.0整合
+  try-host: http://localhost:${server.port}

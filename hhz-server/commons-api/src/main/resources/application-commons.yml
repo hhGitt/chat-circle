@@ -1,0 +1,32 @@
+# 分布式文件系统FDFS配置
+fdfs:
+  so-timeout: 1501
+  connect-timeout: 601
+  thumb-image:             #缩略图生成参数
+    width: 150
+    height: 150
+  tracker-list:            #TrackerList参数,支持多个
+    - 192.168.181.135:22122
+  url: "http://192.168.181.135/"
+
+spring:
+  jackson:
+    # 序列化时间戳
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 3000ms # 连接超时时间（毫秒）
+
+jwt:
+  key: "fkdasljgoewijggadgkp320fafwMFOW23apposaqwn545fewiFJAFJW" #JWT加解密使用的密钥
+  tokenHeader: 'token' #JWT存储的请求头
+  expireTime: 120 #jwtToken的默认有效时间 单位分钟
+  #tokenHead: 'Bearer '  #JWT负载中拿到开头
+  subject: 'userKeySubject' # JWT主题
+
+component-switch:
+  fdfs: true
+  redis: true
+  jwt: true
