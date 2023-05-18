@@ -45,6 +45,14 @@ public class RedisUtils {
     }
 
     /**
+     *
+     */
+    public void incrementByKey(String key, int num) {
+        redisTemplate.opsForValue().increment(key, num);
+    }
+
+
+    /**
      * 获取redis中的值
      *
      * @param key 键名
